@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Custom DNA Text Converter</title>
+  <title>Text and DNA Converter</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f7f9fb;
+      background: #f9fafc;
       color: #222;
       margin: 40px;
       line-height: 1.6;
     }
     h1 {
-      color: #2a6db0;
+      color: #1d5fa7;
     }
     input[type="text"], textarea {
       width: 100%;
@@ -21,17 +21,19 @@
       margin-bottom: 12px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      font-size: 15px;
     }
     button {
-      background-color: #2a6db0;
+      background-color: #1d5fa7;
       color: white;
       padding: 10px 16px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      font-size: 15px;
     }
     button:hover {
-      background-color: #1c4d80;
+      background-color: #164a80;
     }
     .mapping-box {
       display: flex;
@@ -39,37 +41,33 @@
       max-width: 350px;
       margin-bottom: 20px;
     }
+    .mapping-box div {
+      display: flex;
+      align-items: center;
+    }
     .mapping-box label {
-      width: 50px;
+      width: 30px;
     }
   </style>
 </head>
 <body>
-  <h1>🧬 DNA ↔ Text Converter</h1>
-  <p>Enter text or DNA and define your own A/T/G/C mappings.</p>
+  <h1>Text ↔ DNA Converter</h1>
+  <p>This tool converts English text to a DNA sequence and back. You can also change how each DNA base (A, T, G, C) is represented.</p>
 
   <div class="mapping-box">
-    <div>
-      <label>A =</label><input id="A" type="text" value="00">
-    </div>
-    <div>
-      <label>T =</label><input id="T" type="text" value="01">
-    </div>
-    <div>
-      <label>G =</label><input id="G" type="text" value="10">
-    </div>
-    <div>
-      <label>C =</label><input id="C" type="text" value="11">
-    </div>
+    <div><label>A =</label><input id="A" type="text" value="00"></div>
+    <div><label>T =</label><input id="T" type="text" value="01"></div>
+    <div><label>G =</label><input id="G" type="text" value="10"></div>
+    <div><label>C =</label><input id="C" type="text" value="11"></div>
   </div>
 
-  <h3>Convert Text → DNA</h3>
-  <input id="textInput" type="text" placeholder="Enter text (e.g. Hello)">
+  <h3>Convert Text to DNA</h3>
+  <input id="textInput" type="text" placeholder="Enter English text here">
   <button onclick="convertToDNA()">Convert to DNA</button>
   <textarea id="dnaOutput" placeholder="DNA output" readonly></textarea>
 
-  <h3>Convert DNA → Text</h3>
-  <input id="dnaInput" type="text" placeholder="Enter DNA sequence (e.g. ATGCTA)">
+  <h3>Convert DNA to Text</h3>
+  <input id="dnaInput" type="text" placeholder="Enter DNA sequence here (A, T, G, C)">
   <button onclick="convertToText()">Convert to Text</button>
   <textarea id="textOutput" placeholder="Text output" readonly></textarea>
 
@@ -109,14 +107,11 @@
 
     function dnaToText(dna) {
       const map = getMapping();
-      const inv = invertMapping(map);
-      let text = '';
       let bits = '';
-      for (let base of dna) {
-        if (inv[base]) continue; // skip invalid
+      for (let base of dna.toUpperCase()) {
         bits += map[base] || '';
       }
-      // each 8 bits = one char
+      let text = '';
       for (let i = 0; i < bits.length; i += 8) {
         let byte = bits.substring(i, i + 8);
         if (byte.length === 8) text += String.fromCharCode(parseInt(byte, 2));
@@ -130,7 +125,7 @@
     }
 
     function convertToText() {
-      const dna = document.getElementById('dnaInput').value.toUpperCase().replace(/[^ATGC]/g, '');
+      const dna = document.getElementById('dnaInput').value;
       document.getElementById('textOutput').value = dnaToText(dna);
     }
   </script>
